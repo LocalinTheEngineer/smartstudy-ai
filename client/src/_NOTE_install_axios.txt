@@ -1,0 +1,4 @@
+NOT: services/api.js dosyasi axios kullaniyor ama axios henuz client projesine
+kurulmadi. "npm install axios" komutunu client klasorunde calistirmayi unutma.
+
+Bu dosyayi okuduktan sonra silebilirsin (VS Code'da sag tik > Delete).
