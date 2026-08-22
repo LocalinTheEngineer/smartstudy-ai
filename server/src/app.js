@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
+const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
@@ -23,6 +24,10 @@ app.use("/api/auth", authRoutes);
 app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Server ${PORT} portunda calisiyor`);
+
+// Once veritabanina baglan, basariliysa sunucuyu baslat
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`Server ${PORT} portunda calisiyor`);
+  });
 });
