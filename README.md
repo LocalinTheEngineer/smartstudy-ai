@@ -4,7 +4,7 @@ An AI-powered study management platform that helps students organize courses,
 upload study materials, generate quizzes, and create personalized study plans —
 powered by Google's Gemini API.
 
-**🔗 Live Demo:** _Not deployed yet — link will be added here once the app goes live._
+**🔗 Live Demo:** [smartstudy-ai-delta.vercel.app](https://smartstudy-ai-delta.vercel.app)
 
 ## ✨ Features
 
