@@ -21,32 +21,31 @@ function Login() {
   }
 
   return (
-    <div style={{ maxWidth: 360, margin: "2rem auto" }}>
-      <h2>Giriş Yap</h2>
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}
-      >
-        <input
-          type="email"
-          placeholder="E-posta"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Şifre"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        <button type="submit">Giriş Yap</button>
-      </form>
-      <p>
-        Hesabın yok mu? <Link to="/register">Kayıt ol</Link>
-      </p>
+    <div className="page-container auth-page">
+      <div className="card">
+        <h2>Giriş Yap</h2>
+        <form onSubmit={handleSubmit} className="form-stack">
+          <input
+            type="email"
+            placeholder="E-posta"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+          <input
+            type="password"
+            placeholder="Şifre"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+          {error && <p className="error-text">{error}</p>}
+          <button type="submit">Giriş Yap</button>
+        </form>
+        <p className="muted-text" style={{ marginTop: "0.75rem" }}>
+          Hesabın yok mu? <Link to="/register">Kayıt ol</Link>
+        </p>
+      </div>
     </div>
   );
 }

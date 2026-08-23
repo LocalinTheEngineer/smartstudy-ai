@@ -8,6 +8,12 @@ function Courses() {
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  function showSuccess(msg) {
+    setSuccess(msg);
+    setTimeout(() => setSuccess(""), 3000);
+  }
 
   async function loadCourses() {
     try {
@@ -26,8 +32,10 @@ function Courses() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    setError("");
     try {
       await createCourse({ name, description });
+      showSuccess(`✓ "${name}" dersi eklendi`);
       setName("");
       setDescription("");
       loadCourses();
@@ -37,53 +45,48 @@ function Courses() {
   }
 
   return (
-    <div>
-      <h2>My Courses</h2>
+    <div className="page-container">
+      <h2>📚 My Courses</h2>
+      <p className="page-intro">
+        Derslerini burada yönetirsin. Aşağıdaki formdan yeni bir ders ekle; sonra
+        üzerine tıklayarak içine not veya dosya ekleyip AI ile özetleyebilirsin.
+      </p>
 
-      <form
-        onSubmit={handleSubmit}
-        style={{ display: "flex", gap: "0.5rem", marginBottom: "1.5rem", flexWrap: "wrap" }}
-      >
+      <form onSubmit={handleSubmit} className="card form-row" style={{ marginBottom: "1.25rem" }}>
         <input
           type="text"
           placeholder="Ders adı (örn. Data Structures)"
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
+          style={{ flex: "2 1 220px" }}
         />
         <input
           type="text"
           placeholder="Açıklama (isteğe bağlı)"
           value={description}
           onChange={(e) => setDescription(e.target.value)}
+          style={{ flex: "2 1 220px" }}
         />
         <button type="submit">Ders Ekle</button>
       </form>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {loading && <p>Yükleniyor...</p>}
+      {success && <p className="success-banner">{success}</p>}
+      {error && <p className="error-text">{error}</p>}
+      {loading && <p className="muted-text">Yükleniyor...</p>}
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-        {courses.map((course) => (
-          <Link
-            key={course._id}
-            to={`/courses/${course._id}`}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "1rem",
-              textDecoration: "none",
-              color: "inherit",
-            }}
-          >
-            <h3 style={{ margin: 0 }}>{course.name}</h3>
-            {course.description && (
-              <p style={{ margin: "0.25rem 0 0" }}>{course.description}</p>
-            )}
-          </Link>
-        ))}
-        {!loading && courses.length === 0 && <p>Henüz ders eklemedin.</p>}
-      </div>
+      {courses.map((course) => (
+        <Link key={course._id} to={`/courses/${course._id}`} className="card card-link">
+          <h3>{course.name}</h3>
+          {course.description && <p className="muted-text">{course.description}</p>}
+        </Link>
+      ))}
+      {!loading && courses.length === 0 && (
+        <p className="muted-text">
+          Henüz hiç dersin yok. Yukarıdaki formu doldurup "Ders Ekle"ye basarak ilk
+          dersini oluşturabilirsin.
+        </p>
+      )}
     </div>
   );
 }
