@@ -4,6 +4,7 @@ require("dotenv").config();
 
 const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -19,6 +20,7 @@ app.get("/api/health", (req, res) => {
 
 // Auth ile ilgili tum route'lar /api/auth altinda toplanacak
 app.use("/api/auth", authRoutes);
+app.use("/api/ai", aiRoutes);
 
 // En sonda: hicbir route eslesmezse hata yakalayici devreye girer
 app.use(errorHandler);
