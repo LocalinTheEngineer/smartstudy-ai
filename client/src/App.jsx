@@ -1,5 +1,6 @@
 import { Routes, Route, Link, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Courses from "./pages/Courses/Courses";
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
@@ -49,11 +50,46 @@ function App() {
       </nav>
       <main style={{ padding: "1rem" }}>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
-          <Route path="/courses" element={<Courses />} />
-          <Route path="/courses/:id" element={<CourseDetails />} />
-          <Route path="/quiz" element={<Quiz />} />
-          <Route path="/study-planner" element={<StudyPlanner />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses"
+            element={
+              <ProtectedRoute>
+                <Courses />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/courses/:id"
+            element={
+              <ProtectedRoute>
+                <CourseDetails />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/quiz"
+            element={
+              <ProtectedRoute>
+                <Quiz />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/study-planner"
+            element={
+              <ProtectedRoute>
+                <StudyPlanner />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
         </Routes>
