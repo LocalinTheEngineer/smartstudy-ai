@@ -1,14 +1,27 @@
 const { askGemini } = require("../services/geminiService");
+const Material = require("../models/Material");
+const { extractMaterialText } = require("./materialController");
 
-// Bir metni ozetle
+// Bir metni ozetle. Ya dogrudan "text" gonderilir, ya da bir "materialId"
+// verilir ve o materyalin gercek icerigi (not, .txt ya da .pdf) okunup ozetlenir.
 async function summarize(req, res) {
   try {
-    const { text } = req.body;
-    if (!text) {
-      return res.status(400).json({ message: "text alani zorunlu" });
+    const { text, materialId } = req.body;
+    let content = text;
+
+    if (materialId) {
+      const material = await Material.findById(materialId).populate("course");
+      if (!material || String(material.course.owner) !== req.userId) {
+        return res.status(404).json({ message: "Materyal bulunamadi" });
+      }
+      content = await extractMaterialText(material);
     }
 
-    const prompt = `Asagidaki ders notunu Turkce olarak ozetle. Ana basliklari ve onemli kavramlari belirt, kisa ve anlasilir yaz:\n\n${text}`;
+    if (!content) {
+      return res.status(400).json({ message: "text ya da materialId alani zorunlu" });
+    }
+
+    const prompt = `Asagidaki ders notunu Turkce olarak ozetle. Ana basliklari ve onemli kavramlari belirt, kisa ve anlasilir yaz:\n\n${content}`;
     const summary = await askGemini(prompt);
     res.json({ summary });
   } catch (err) {
@@ -16,7 +29,6 @@ async function summarize(req, res) {
   }
 }
 
-// Bir konudan cok secmeli quiz uret
 async function generateQuiz(req, res) {
   try {
     const { topic, questionCount = 5, difficulty = "orta" } = req.body;
@@ -39,7 +51,6 @@ SADECE asagidaki JSON formatinda cevap ver, baska hicbir aciklama veya metin ekl
   }
 }
 
-// Calisma plani uret
 async function generateStudyPlan(req, res) {
   try {
     const { examDate, availableTime, subjects } = req.body;
