@@ -8,6 +8,7 @@ import {
   deleteMaterial,
 } from "../../services/materialService";
 import { summarizeMaterial } from "../../services/aiService";
+import MarkdownText from "../../components/MarkdownText/MarkdownText";
 
 function CourseDetails() {
   const { id } = useParams();
@@ -169,7 +170,11 @@ function CourseDetails() {
             </span>
           </div>
           <p className="muted-text">{m.type === "note" ? "Metin notu" : `Dosya: ${m.fileName}`}</p>
-          {summaries[m._id] && <div className="summary-box">{summaries[m._id]}</div>}
+          {summaries[m._id] && (
+            <div className="summary-box">
+              <MarkdownText>{summaries[m._id]}</MarkdownText>
+            </div>
+          )}
         </div>
       ))}
       {materials.length === 0 && (

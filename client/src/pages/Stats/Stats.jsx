@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getQuizStats } from "../../services/quizAttemptService";
+import { getQuizStats, getLearningInsights } from "../../services/quizAttemptService";
+import MarkdownText from "../../components/MarkdownText/MarkdownText";
 
 function barColor(accuracy) {
   if (accuracy < 60) return "var(--color-danger)";
@@ -11,12 +12,28 @@ function barColor(accuracy) {
 function Stats() {
   const [stats, setStats] = useState(null);
   const [error, setError] = useState("");
+  const [insight, setInsight] = useState("");
+  const [insightLoading, setInsightLoading] = useState(false);
+  const [insightError, setInsightError] = useState("");
 
   useEffect(() => {
     getQuizStats()
       .then((res) => setStats(res.data))
       .catch((err) => setError(err.response?.data?.message || "İstatistikler yüklenemedi"));
   }, []);
+
+  async function handleGetInsight() {
+    setInsightError("");
+    setInsightLoading(true);
+    try {
+      const res = await getLearningInsights();
+      setInsight(res.data.insight);
+    } catch (err) {
+      setInsightError(err.response?.data?.message || "Analiz oluşturulamadı");
+    } finally {
+      setInsightLoading(false);
+    }
+  }
 
   return (
     <div className="page-container">
@@ -54,6 +71,26 @@ function Stats() {
               </div>
               <div className="stat-tile-label">Doğru cevap</div>
             </div>
+          </div>
+
+          <div className="card">
+            <h3>🧠 AI Öğrenme Analizi</h3>
+            <p className="muted-text">
+              Quiz geçmişine bakıp sana kısa bir değerlendirme ve tavsiye üretsin.
+            </p>
+            <button type="button" onClick={handleGetInsight} disabled={insightLoading}>
+              {insightLoading
+                ? "Analiz ediliyor... (genelde birkaç saniye, yoğun ağlarda ~1 dk sürebilir)"
+                : insight
+                ? "Analizi Yenile"
+                : "AI Analizi İste"}
+            </button>
+            {insightError && <p className="error-text">{insightError}</p>}
+            {insight && (
+              <div className="insight-box">
+                <MarkdownText>{insight}</MarkdownText>
+              </div>
+            )}
           </div>
 
           {stats.dueForReview && stats.dueForReview.length > 0 && (

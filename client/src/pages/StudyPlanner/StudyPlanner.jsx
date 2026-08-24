@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { generateStudyPlan } from "../../services/aiService";
 import { getQuizStats } from "../../services/quizAttemptService";
+import MarkdownText from "../../components/MarkdownText/MarkdownText";
 
 function StudyPlanner() {
   const [examDate, setExamDate] = useState("");
@@ -113,7 +114,11 @@ function StudyPlanner() {
         </button>
       </form>
 
-      {plan && <div className="card plan-box">{plan}</div>}
+      {plan && (
+        <div className="card plan-box">
+          <MarkdownText>{plan}</MarkdownText>
+        </div>
+      )}
     </div>
   );
 }

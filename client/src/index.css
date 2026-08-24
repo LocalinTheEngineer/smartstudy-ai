@@ -8,12 +8,45 @@
   --color-primary-hover: #4338ca;
   --color-primary-soft: #eef2ff;
   --color-success: #16a34a;
+  --color-success-soft: #f0fdf4;
+  --color-success-border: #bbf7d0;
   --color-danger: #dc2626;
+  --color-danger-soft: #fef2f2;
+  --color-danger-border: #fecaca;
+  --color-warning: #d97706;
+  --color-warning-soft: #fffbeb;
+  --color-warning-border: #fde68a;
   --radius: 10px;
   --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
   --shadow-md: 0 6px 16px rgba(16, 24, 40, 0.08);
   font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
   color-scheme: light;
+}
+
+/* Koyu tema - <html data-theme="dark"> ile aktif olur (bkz. useTheme hook'u).
+   Ayni degisken adlarini farkli degerlerle yeniden tanimliyoruz, boylece
+   App.css'teki hicbir sey degismeden otomatik olarak koyu temaya uyar. */
+:root[data-theme="dark"] {
+  --color-bg: #10121a;
+  --color-surface: #1a1d29;
+  --color-border: #2c303f;
+  --color-text: #e7e9f0;
+  --color-text-muted: #9aa1b4;
+  --color-primary: #818cf8;
+  --color-primary-hover: #a5b0fb;
+  --color-primary-soft: #23263c;
+  --color-success: #4ade80;
+  --color-success-soft: rgba(74, 222, 128, 0.12);
+  --color-success-border: rgba(74, 222, 128, 0.35);
+  --color-danger: #f87171;
+  --color-danger-soft: rgba(248, 113, 113, 0.12);
+  --color-danger-border: rgba(248, 113, 113, 0.35);
+  --color-warning: #fbbf24;
+  --color-warning-soft: rgba(251, 191, 36, 0.12);
+  --color-warning-border: rgba(251, 191, 36, 0.35);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 6px 16px rgba(0, 0, 0, 0.5);
+  color-scheme: dark;
 }
 
 * {
