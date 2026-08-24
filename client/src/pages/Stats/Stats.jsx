@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { getQuizStats } from "../../services/quizAttemptService";
 
 function barColor(accuracy) {
@@ -54,6 +55,34 @@ function Stats() {
               <div className="stat-tile-label">Doğru cevap</div>
             </div>
           </div>
+
+          {stats.dueForReview && stats.dueForReview.length > 0 && (
+            <div className="card due-review-card">
+              <h3>🔁 Tekrar Zamanı</h3>
+              <p className="muted-text">
+                Aralıklı tekrar prensibine göre bu konuları tekrar etme zamanın geldi —
+                ne kadar geç kalırsan bilgi o kadar unutulur.
+              </p>
+              {stats.dueForReview.map((t) => (
+                <div className="due-review-row" key={t.topic}>
+                  <div>
+                    <span className="topic-name">{t.topic}</span>
+                    <span className="muted-text due-review-meta">
+                      {" "}
+                      — son çalışma{" "}
+                      {t.daysSinceLastAttempt === 0
+                        ? "bugün"
+                        : `${t.daysSinceLastAttempt} gün önce`}{" "}
+                      (%{t.lastAccuracy})
+                    </span>
+                  </div>
+                  <Link to={`/quiz?topic=${encodeURIComponent(t.topic)}`} className="due-review-btn">
+                    Tekrar Et
+                  </Link>
+                </div>
+              ))}
+            </div>
+          )}
 
           {stats.weakTopics.length > 0 && (
             <div className="weak-topics-banner">

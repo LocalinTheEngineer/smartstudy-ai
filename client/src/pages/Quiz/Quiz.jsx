@@ -1,9 +1,11 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { generateQuiz } from "../../services/aiService";
 import { saveQuizAttempt } from "../../services/quizAttemptService";
 
 function Quiz() {
-  const [topic, setTopic] = useState("");
+  const [searchParams] = useSearchParams();
+  const [topic, setTopic] = useState(searchParams.get("topic") || "");
   const [questionCount, setQuestionCount] = useState(5);
   const [difficulty, setDifficulty] = useState("orta");
   const [quiz, setQuiz] = useState(null);
