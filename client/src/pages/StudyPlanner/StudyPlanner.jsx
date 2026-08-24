@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { generateStudyPlan } from "../../services/aiService";
 import { getQuizStats } from "../../services/quizAttemptService";
 
@@ -10,23 +10,29 @@ function StudyPlanner() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [weakTopics, setWeakTopics] = useState([]);
+  const [topicStats, setTopicStats] = useState([]);
+  const autoFilledRef = useRef(false);
 
   useEffect(() => {
     getQuizStats()
-      .then((res) => setWeakTopics(res.data.weakTopics || []))
+      .then((res) => {
+        setWeakTopics(res.data.weakTopics || []);
+        setTopicStats(res.data.topics || []);
+      })
       .catch(() => {
         // istatistik yoksa/erisilemezse sessizce gec
       });
   }, []);
 
-  function addWeakTopicsToSubjects() {
-    const current = subjects
-      .split(",")
-      .map((s) => s.trim())
-      .filter(Boolean);
-    const merged = Array.from(new Set([...current, ...weakTopics]));
-    setSubjects(merged.join(", "));
-  }
+  // Zayif konular yuklendiginde, ders alani hala bossa otomatik olarak
+  // oraya eklenir - kullanicinin ayrica bir butona basmasina gerek kalmaz.
+  useEffect(() => {
+    if (autoFilledRef.current) return;
+    if (weakTopics.length === 0) return;
+    if (subjects.trim() !== "") return;
+    setSubjects(weakTopics.join(", "));
+    autoFilledRef.current = true;
+  }, [weakTopics, subjects]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -38,7 +44,12 @@ function StudyPlanner() {
         .split(",")
         .map((s) => s.trim())
         .filter(Boolean);
-      const res = await generateStudyPlan({ examDate, availableTime, subjects: subjectList });
+      const res = await generateStudyPlan({
+        examDate,
+        availableTime,
+        subjects: subjectList,
+        topicPerformance: topicStats,
+      });
       setPlan(res.data.plan);
     } catch (err) {
       setError(err.response?.data?.message || "Plan olusturulamadi");
@@ -46,6 +57,11 @@ function StudyPlanner() {
       setLoading(false);
     }
   }
+
+  const weakTopicDetails = weakTopics.map((topic) => {
+    const stat = topicStats.find((t) => t.topic === topic);
+    return stat ? `${topic} (%${stat.accuracy})` : topic;
+  });
 
   return (
     <div className="page-container">
@@ -57,11 +73,10 @@ function StudyPlanner() {
 
       {weakTopics.length > 0 && (
         <div className="weak-topics-banner">
-          <strong>Zayıf konuların:</strong> {weakTopics.join(", ")} — quiz sonuçlarına göre bu
-          konularda %60'ın altında doğruluk oranın var.{" "}
-          <button type="button" onClick={addWeakTopicsToSubjects} style={{ marginLeft: "0.4rem" }}>
-            Derslere ekle
-          </button>
+          <strong>Zayıf konuların:</strong> {weakTopicDetails.join(", ")} — quiz sonuçlarına göre
+          bu konularda %60'ın altında doğruluk oranın var. Bu konular aşağıdaki derslere otomatik
+          olarak eklendi ve oluşturulacak planda bu konulara normalden daha fazla zaman
+          ayrılacak.
         </div>
       )}
 
@@ -87,7 +102,10 @@ function StudyPlanner() {
           onChange={(e) => setSubjects(e.target.value)}
           required
         />
-        <p className="field-hint">Birden fazla dersi virgülle ayırarak yaz.</p>
+        <p className="field-hint">
+          Birden fazla dersi virgülle ayırarak yaz. Zayıf konuların varsa otomatik eklenir, istersen
+          düzenleyebilirsin.
+        </p>
 
         {error && <p className="error-text">{error}</p>}
         <button type="submit" disabled={loading}>
