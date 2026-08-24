@@ -22,6 +22,10 @@ function Dashboard() {
           <h3>📅 Study Planner</h3>
           <p className="muted-text">Sınav tarihine göre çalışma planı oluştur</p>
         </Link>
+        <Link to="/stats" className="card card-link dashboard-tile">
+          <h3>📊 İstatistiklerim</h3>
+          <p className="muted-text">Konu bazlı performansını ve zayıf konularını gör</p>
+        </Link>
       </div>
     </div>
   );

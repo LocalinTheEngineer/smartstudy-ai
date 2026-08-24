@@ -6,6 +6,7 @@ import Courses from "./pages/Courses/Courses";
 import CourseDetails from "./pages/CourseDetails/CourseDetails";
 import Quiz from "./pages/Quiz/Quiz";
 import StudyPlanner from "./pages/StudyPlanner/StudyPlanner";
+import Stats from "./pages/Stats/Stats";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
 import "./App.css";
@@ -52,6 +53,14 @@ function App() {
           element={
             <ProtectedRoute>
               <StudyPlanner />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/stats"
+          element={
+            <ProtectedRoute>
+              <Stats />
             </ProtectedRoute>
           }
         />

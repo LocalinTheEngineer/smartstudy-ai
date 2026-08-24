@@ -17,6 +17,7 @@ function Navbar() {
       <Link to="/courses">Courses</Link>
       <Link to="/quiz">Quiz</Link>
       <Link to="/study-planner">Study Planner</Link>
+      <Link to="/stats">İstatistikler</Link>
       <span className="topnav-right">
         {user ? (
           <>

@@ -7,6 +7,7 @@ const authRoutes = require("./routes/authRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const courseRoutes = require("./routes/courseRoutes");
 const materialRoutes = require("./routes/materialRoutes");
+const quizAttemptRoutes = require("./routes/quizAttemptRoutes");
 const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
@@ -25,6 +26,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/ai", aiRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/materials", materialRoutes);
+app.use("/api/quiz-attempts", quizAttemptRoutes);
 
 // En sonda: hicbir route eslesmezse hata yakalayici devreye girer
 app.use(errorHandler);

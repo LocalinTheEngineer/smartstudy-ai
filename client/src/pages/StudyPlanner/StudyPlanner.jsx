@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { generateStudyPlan } from "../../services/aiService";
+import { getQuizStats } from "../../services/quizAttemptService";
 
 function StudyPlanner() {
   const [examDate, setExamDate] = useState("");
@@ -8,6 +9,24 @@ function StudyPlanner() {
   const [plan, setPlan] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [weakTopics, setWeakTopics] = useState([]);
+
+  useEffect(() => {
+    getQuizStats()
+      .then((res) => setWeakTopics(res.data.weakTopics || []))
+      .catch(() => {
+        // istatistik yoksa/erisilemezse sessizce gec
+      });
+  }, []);
+
+  function addWeakTopicsToSubjects() {
+    const current = subjects
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
+    const merged = Array.from(new Set([...current, ...weakTopics]));
+    setSubjects(merged.join(", "));
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -35,6 +54,16 @@ function StudyPlanner() {
         Sınav tarihini, müsait olduğun zamanları ve çalışman gereken dersleri gir; AI
         sana gün gün, saat aralıklı bir çalışma planı hazırlasın.
       </p>
+
+      {weakTopics.length > 0 && (
+        <div className="weak-topics-banner">
+          <strong>Zayıf konuların:</strong> {weakTopics.join(", ")} — quiz sonuçlarına göre bu
+          konularda %60'ın altında doğruluk oranın var.{" "}
+          <button type="button" onClick={addWeakTopicsToSubjects} style={{ marginLeft: "0.4rem" }}>
+            Derslere ekle
+          </button>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="card form-stack">
         <label>Sınav Tarihi</label>

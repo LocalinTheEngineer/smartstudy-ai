@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { generateQuiz } from "../../services/aiService";
+import { saveQuizAttempt } from "../../services/quizAttemptService";
 
 function Quiz() {
   const [topic, setTopic] = useState("");
@@ -31,13 +32,34 @@ function Quiz() {
     setAnswers((prev) => ({ ...prev, [index]: option }));
   }
 
-  function handleSubmitAnswers(e) {
+  async function handleSubmitAnswers(e) {
     e.preventDefault();
     let correct = 0;
-    quiz.forEach((q, i) => {
-      if (answers[i] === q.answer) correct += 1;
+    const questionResults = quiz.map((q, i) => {
+      const isCorrect = answers[i] === q.answer;
+      if (isCorrect) correct += 1;
+      return {
+        question: q.question,
+        correctAnswer: q.answer,
+        userAnswer: answers[i] || "",
+        isCorrect,
+      };
     });
+
     setResult({ correct, total: quiz.length });
+
+    // Sonucu istatistikler icin kaydet (basarisiz olsa da quiz sonucunu gostermeye devam ederiz)
+    try {
+      await saveQuizAttempt({
+        topic,
+        difficulty,
+        score: correct,
+        total: quiz.length,
+        questions: questionResults,
+      });
+    } catch {
+      // istatistik kaydi basarisiz olsa bile kullaniciyi engellemeyelim
+    }
   }
 
   function handleReset() {
@@ -57,7 +79,8 @@ function Quiz() {
         <>
           <p className="page-intro">
             Bir konu yaz, AI senin için çoktan seçmeli bir quiz hazırlasın. Cevapladıktan
-            sonra kaç doğru yaptığını ve hangi soruları yanlış yaptığını göreceksin.
+            sonra kaç doğru yaptığını göreceksin — sonuçların İstatistikler sayfasında da
+            konu bazlı olarak birikir.
           </p>
           <form onSubmit={handleGenerate} className="card form-stack">
             <input
@@ -136,7 +159,7 @@ function Quiz() {
           <p className="muted-text">
             {result.correct === result.total
               ? "Tebrikler, hepsini doğru yaptın! 🎉"
-              : "Yanlış yaptığın soruları aşağıda görebilir, doğru cevaplarını inceleyebilirsin."}
+              : "Yanlış yaptığın soruları aşağıda görebilir, doğru cevaplarını inceleyebilirsin. Sonuç İstatistikler sayfasına da kaydedildi."}
           </p>
           {quiz.map((q, i) => (
             <div key={i} style={{ marginTop: "0.75rem" }}>
