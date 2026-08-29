@@ -1,5 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar/Navbar";
+import WakeUpBanner from "./components/WakeUpBanner/WakeUpBanner";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Courses from "./pages/Courses/Courses";
@@ -15,6 +16,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <WakeUpBanner />
       <Routes>
         <Route
           path="/"

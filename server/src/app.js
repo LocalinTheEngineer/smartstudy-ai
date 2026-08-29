@@ -9,6 +9,7 @@ const courseRoutes = require("./routes/courseRoutes");
 const materialRoutes = require("./routes/materialRoutes");
 const quizAttemptRoutes = require("./routes/quizAttemptRoutes");
 const errorHandler = require("./middleware/errorHandler");
+const { apiLimiter } = require("./middleware/rateLimiter");
 
 const app = express();
 
@@ -20,6 +21,9 @@ app.use(express.json());
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "SmartStudy AI backend calisiyor" });
 });
+
+// Butun /api rotalarina genel bir istek limiti uygulaniyor (kotuye kullanima karsi)
+app.use("/api", apiLimiter);
 
 // Auth ile ilgili tum route'lar /api/auth altinda toplanacak
 app.use("/api/auth", authRoutes);

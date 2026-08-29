@@ -1,0 +1,19 @@
+name: Keep Backend Awake
+
+# Render'in ucretsiz katmani 15 dakika istek gelmezse backend'i uyutuyor,
+# ilk istek de ~1 dakika surebiliyor. Bu, 10 dakikada bir health endpoint'ini
+# "dokunarak" backend'in hep uyanik kalmasini sagliyor - boylece canli demo
+# gosterirken (ornegin bir mulakatta) beklenmedik bir yavaslik olmuyor.
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping backend health endpoint
+        run: |
+          curl -sf https://smartstudy-ai-backend-q3hw.onrender.com/api/health \
+            || echo "Ping basarisiz oldu (backend uyaniyor olabilir, normal)"
