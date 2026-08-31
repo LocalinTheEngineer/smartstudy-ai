@@ -2,7 +2,6 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 
-const connectDB = require("./config/db");
 const authRoutes = require("./routes/authRoutes");
 const aiRoutes = require("./routes/aiRoutes");
 const courseRoutes = require("./routes/courseRoutes");
@@ -11,6 +10,11 @@ const quizAttemptRoutes = require("./routes/quizAttemptRoutes");
 const errorHandler = require("./middleware/errorHandler");
 const { apiLimiter } = require("./middleware/rateLimiter");
 
+// Bu dosya SADECE Express app'ini kurup disari aciyor - veritabanina
+// baglanmiyor, sunucuyu dinlemeye baslatmiyor (app.listen yok). Boylece
+// testler (bkz. tests/) bu app'i dogrudan import edip supertest ile
+// gercek bir port acmadan/gercek MongoDB'ye baglanmadan calistirabiliyor.
+// Gercek calistirma (DB baglantisi + app.listen) server.js'de.
 const app = express();
 
 // Middleware: gelen istekleri kullanabilmemiz icin
@@ -35,11 +39,4 @@ app.use("/api/quiz-attempts", quizAttemptRoutes);
 // En sonda: hicbir route eslesmezse hata yakalayici devreye girer
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 5000;
-
-// Once veritabanina baglan, basariliysa sunucuyu baslat
-connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`Server ${PORT} portunda calisiyor`);
-  });
-});
+module.exports = app;

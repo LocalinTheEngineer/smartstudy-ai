@@ -2,9 +2,8 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../../hooks/useAuth";
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user } = useAuth();
 
-  if (loading) return <p>Yükleniyor...</p>;
   if (!user) return <Navigate to="/login" replace />;
 
   return children;

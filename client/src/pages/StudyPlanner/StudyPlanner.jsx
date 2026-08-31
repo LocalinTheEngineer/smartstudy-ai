@@ -31,6 +31,9 @@ function StudyPlanner() {
     if (autoFilledRef.current) return;
     if (weakTopics.length === 0) return;
     if (subjects.trim() !== "") return;
+    // Zayif konular API'den asenkron geldigi icin (ve sadece bir kez, ref ile
+    // korunarak) burada bilerek senkron bir setState yapiyoruz.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setSubjects(weakTopics.join(", "));
     autoFilledRef.current = true;
   }, [weakTopics, subjects]);

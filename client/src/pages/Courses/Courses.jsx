@@ -27,6 +27,10 @@ function Courses() {
   }
 
   useEffect(() => {
+    // Sayfa acildiginda dersleri yukluyoruz - standart "mount'ta veri cek"
+    // deseni; loadCourses icindeki setState'ler async oldugu icin bu kural
+    // burada yanlis pozitif veriyor.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadCourses();
   }, []);
 

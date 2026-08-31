@@ -1,5 +1,6 @@
 const QuizAttempt = require("../models/QuizAttempt");
 const { askGemini } = require("../services/geminiService");
+const { reviewIntervalDays } = require("../utils/spacedRepetition");
 
 async function saveAttempt(req, res) {
   try {
@@ -30,14 +31,6 @@ async function getAttempts(req, res) {
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
-}
-
-// Bir konunun son quiz basarisina gore, bir sonraki tekrarin ne zaman
-// yapilmasi gerektigini belirler (basit araliki tekrar / spaced repetition kurali).
-function reviewIntervalDays(lastAccuracy) {
-  if (lastAccuracy < 60) return 1; // zayifsan yarin tekrar et
-  if (lastAccuracy < 80) return 3; // ortaysa 3 gun sonra
-  return 7; // iyiysen 1 hafta sonra
 }
 
 // Konu bazli dogru/yanlis istatistigi + zayif konu tespiti + tekrar zamani (spaced repetition).

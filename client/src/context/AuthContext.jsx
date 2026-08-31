@@ -1,20 +1,17 @@
-import { createContext, useState, useEffect } from "react";
+import { useState } from "react";
 import { loginUser, registerUser, logoutUser } from "../services/authService";
+import { AuthContext } from "./authContextInstance";
 
-export const AuthContext = createContext(null);
+function getStoredUser() {
+  const storedUser = localStorage.getItem("user");
+  return storedUser ? JSON.parse(storedUser) : null;
+}
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  // Sayfa yenilendiginde, daha once giris yapilmissa kullaniciyi hatirla
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setLoading(false);
-  }, []);
+  // Sayfa yenilendiginde, daha once giris yapilmissa kullaniciyi bir efekt
+  // beklemeden, ilk render'da "lazy" state baslangiciyla hemen hatirliyoruz -
+  // bu hem daha basit hem de bir "loading" araya girmesini gereksiz kiliyor.
+  const [user, setUser] = useState(getStoredUser);
 
   async function login(email, password) {
     const res = await loginUser({ email, password });
@@ -39,7 +36,7 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );

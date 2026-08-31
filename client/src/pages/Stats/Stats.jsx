@@ -2,12 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getQuizStats, getLearningInsights } from "../../services/quizAttemptService";
 import MarkdownText from "../../components/MarkdownText/MarkdownText";
-
-function barColor(accuracy) {
-  if (accuracy < 60) return "var(--color-danger)";
-  if (accuracy < 80) return "var(--color-warning)";
-  return "var(--color-success)";
-}
+import { barColor } from "../../utils/statsHelpers";
 
 function Stats() {
   const [stats, setStats] = useState(null);

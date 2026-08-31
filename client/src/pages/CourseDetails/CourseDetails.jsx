@@ -42,6 +42,10 @@ function CourseDetails() {
   }
 
   useEffect(() => {
+    // Sayfa acildiginda/ders id'si degistiginde veriyi yukluyoruz - standart
+    // "mount'ta veri cek" deseni; loadData icindeki setState'ler async oldugu
+    // icin bu kural burada yanlis pozitif veriyor.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
