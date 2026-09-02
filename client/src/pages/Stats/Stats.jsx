@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { getQuizStats, getLearningInsights } from "../../services/quizAttemptService";
 import MarkdownText from "../../components/MarkdownText/MarkdownText";
 import { barColor } from "../../utils/statsHelpers";
+import EmptyState from "../../components/EmptyState/EmptyState";
 
 function Stats() {
   const [stats, setStats] = useState(null);
@@ -43,10 +44,13 @@ function Stats() {
       {!stats && !error && <p className="muted-text">Yükleniyor...</p>}
 
       {stats && stats.totalAttempts === 0 && (
-        <p className="muted-text">
-          Henüz hiç quiz çözmedin. Quiz sayfasından bir quiz çözünce burada
-          istatistiklerin görünmeye başlayacak.
-        </p>
+        <EmptyState
+          icon="📊"
+          title="Henüz hiç quiz çözmedin"
+          description="Bir quiz çözünce burada konu bazlı doğruluk oranın, zayıf konuların ve AI öğrenme analizin görünmeye başlayacak."
+          actionLabel="İlk Quizini Çöz"
+          actionTo="/quiz"
+        />
       )}
 
       {stats && stats.totalAttempts > 0 && (

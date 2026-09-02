@@ -9,6 +9,7 @@ import {
 } from "../../services/materialService";
 import { summarizeMaterial } from "../../services/aiService";
 import MarkdownText from "../../components/MarkdownText/MarkdownText";
+import EmptyState from "../../components/EmptyState/EmptyState";
 
 function CourseDetails() {
   const { id } = useParams();
@@ -182,10 +183,11 @@ function CourseDetails() {
         </div>
       ))}
       {materials.length === 0 && (
-        <p className="muted-text">
-          Henüz materyal eklemedin. Yukarıdaki formlardan birini kullanarak ilk
-          notunu veya dosyanı ekleyebilirsin.
-        </p>
+        <EmptyState
+          icon="📝"
+          title="Henüz materyal eklemedin"
+          description="Yukarıdaki formlardan birini kullanarak ilk notunu veya dosyanı ekle - sonra yanındaki Özetle butonuyla AI'dan kısa bir özet isteyebilirsin."
+        />
       )}
     </div>
   );

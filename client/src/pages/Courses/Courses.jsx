@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getCourses, createCourse } from "../../services/courseService";
+import EmptyState from "../../components/EmptyState/EmptyState";
 
 function Courses() {
   const [courses, setCourses] = useState([]);
@@ -85,11 +86,12 @@ function Courses() {
           {course.description && <p className="muted-text">{course.description}</p>}
         </Link>
       ))}
-      {!loading && courses.length === 0 && (
-        <p className="muted-text">
-          Henüz hiç dersin yok. Yukarıdaki formu doldurup "Ders Ekle"ye basarak ilk
-          dersini oluşturabilirsin.
-        </p>
+      {!loading && courses.length === 0 && !error && (
+        <EmptyState
+          icon="📚"
+          title="Henüz hiç dersin yok"
+          description={'Yukarıdaki formu doldurup "Ders Ekle"ye basarak ilk dersini oluşturabilirsin. Sonra içine not veya dosya ekleyip AI ile özetleyebilirsin.'}
+        />
       )}
     </div>
   );
