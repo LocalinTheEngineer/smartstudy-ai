@@ -26,6 +26,7 @@ function Navbar() {
           onClick={toggleTheme}
           className="theme-toggle-btn"
           title={theme === "dark" ? "Açık temaya geç" : "Koyu temaya geç"}
+          aria-label={theme === "dark" ? "Açık temaya geç" : "Koyu temaya geç"}
         >
           {theme === "dark" ? "☀️" : "🌙"}
         </button>

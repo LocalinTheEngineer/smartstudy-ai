@@ -9,7 +9,7 @@ function WakeUpBanner() {
   if (!isWaking) return null;
 
   return (
-    <div className="wakeup-banner">
+    <div className="wakeup-banner" role="status" aria-live="polite">
       ⏳ Sunucu uyanıyor olabilir (ücretsiz sunucu, ~1 dk sürebilir), lütfen bekle...
     </div>
   );

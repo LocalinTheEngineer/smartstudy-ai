@@ -85,11 +85,18 @@ function StudyPlanner() {
       )}
 
       <form onSubmit={handleSubmit} className="card form-stack">
-        <label>Sınav Tarihi</label>
-        <input type="date" value={examDate} onChange={(e) => setExamDate(e.target.value)} required />
+        <label htmlFor="exam-date">Sınav Tarihi</label>
+        <input
+          id="exam-date"
+          type="date"
+          value={examDate}
+          onChange={(e) => setExamDate(e.target.value)}
+          required
+        />
 
-        <label>Müsait Zamanların</label>
+        <label htmlFor="available-time">Müsait Zamanların</label>
         <textarea
+          id="available-time"
           placeholder="Örn: Pazartesi 2 saat, Salı 3 saat, Çarşamba 1 saat"
           value={availableTime}
           onChange={(e) => setAvailableTime(e.target.value)}
@@ -98,8 +105,9 @@ function StudyPlanner() {
         />
         <p className="field-hint">Gün ve süreyi serbest metin olarak yazabilirsin, format önemli değil.</p>
 
-        <label>Çalışılacak Dersler</label>
+        <label htmlFor="subjects">Çalışılacak Dersler</label>
         <input
+          id="subjects"
           type="text"
           placeholder="Örn: Data Structures, Database, Calculus"
           value={subjects}
